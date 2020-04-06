@@ -1,0 +1,39 @@
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-nav',
+  templateUrl: './nav.component.html',
+  styleUrls: ['./nav.component.css']
+})
+export class NavComponent implements OnInit {
+
+  constructor(
+     public router: Router) { }
+
+  ngOnInit() {
+  }
+
+  showMenu() {
+    return this.router.url !== '/user/login';
+  }
+
+  // loggedIn() {
+  //   return this.authService.loggedIn();
+  // }
+
+  entrar() {
+    this.router.navigate(['/user/login']);
+  }
+
+  // logout() {
+  //   localStorage.removeItem('token');
+  //   this.toastr.show('Log Out');
+  //   this.router.navigate(['/user/login']);
+  // }
+
+  userName() {
+    return sessionStorage.getItem('username');
+  }
+
+}
