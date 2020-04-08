@@ -8,20 +8,25 @@ import { Observable } from 'rxjs';
 })
 export class EventoService {
 
+  constructor(private http: HttpClient) { }
+
   private urlAPI = 'http://localhost:5000/api/eventos/';
 
-  constructor(private http: HttpClient) { }
+
+  postNovoEvento(evento: Evento) {
+    return this.http.post(this.urlAPI, evento);      
+  }
 
 
   getEventos(): Observable<Evento[]> {
     return this.http.get<Evento[]>(this.urlAPI);
   }
 
-  getEventosByTema(tema: string): Observable<Evento[]>  {
+  getEventosByTema(tema: string): Observable<Evento[]> {
     return this.http.get<Evento[]>(`${this.urlAPI}/getBytema/${tema}`);
   }
 
-  getEventosById(id: number): Observable<Evento>  {
+  getEventosById(id: number): Observable<Evento> {
     return this.http.get<Evento>(`${this.urlAPI}/${id}`);
   }
 }

@@ -6,12 +6,99 @@
     </div>
   </div>
   <div>
-    <button class="btn btn-outline-primary" (click)="novoEvento(template)">
+    <button class="btn btn-outline-primary" (click)="openModal(template)">
       <i class="fa fa-plus-circle"></i>&nbsp;
       Novo Evento
     </button>
   </div>
 </div>
+
+<div bsModal #template="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">Large modal</h4>
+        <button type="button" class="close pull-right" (click)="template.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="newEventosForm">
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label>Tema</label>
+              <input [ngClass]="{'is-invalid': newEventosForm.get('tema').errors && 
+              newEventosForm.get('tema').touched }" formControlName="tema" type="text" class="form-control">
+              <div class="invalid-feedback" *ngIf="newEventosForm.get('tema').hasError('required')">Tema obrigatório
+              </div>
+              <div class="invalid-feedback" *ngIf="newEventosForm.get('tema').hasError('minlength')">Minimo 4 caracteres
+              </div>
+              <div class="invalid-feedback" *ngIf="newEventosForm.get('tema').hasError('maxlength')">Maximo 30
+                caracteres</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-8">
+              <label>Local</label>
+              <input formControlName="local" type="text" class="form-control"
+                [ngClass]="{'is-invalid' : newEventosForm.get('local').errors && newEventosForm.get('local').touched}">
+              <div class="invalid-feedback" *ngIf="newEventosForm.get('local').hasError('required')">Local obrigatório
+              </div>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Data e Hora</label>
+              <input bsDatepicker [bsConfig]="bsConfig"
+                [ngClass]="{'is-invalid': newEventosForm.get('dataEvento').errors && newEventosForm.get('dataEvento').touched}"
+                formControlName="dataEvento" type="text" class="form-control">
+              <div class="invalid-feedback" *ngIf="newEventosForm.get('dataEvento').hasError('required')">Data e Hora
+                obrigatório</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-3">
+              <label>Qtd Pessoas</label>
+              <input
+                [ngClass]="{'is-invalid' : newEventosForm.get('qtdPessoas').errors && newEventosForm.get('qtdPessoas').touched}"
+                formControlName="qtdPessoas" type="text" class="form-control">
+              <div class="invalid-feedback" *ngIf="newEventosForm.get('qtdPessoas').hasError('required')">Qtd
+                obrigatória</div>
+              <div class="invalid-feedback" *ngIf="newEventosForm.get('qtdPessoas').hasError('pattern')">Numero porra!
+                😒</div>
+            </div>
+            <div class="form-group col-md-9">
+              <label>Imagem</label>
+              <input formControlName="imagemURL" type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label>Telefone</label>
+              <input formControlName="telefone" type="text" class="form-control">
+            </div>
+            <div class="form-group col-md-8">
+              <label>Email</label>
+              <input
+                [ngClass]="{'is-invalid':  newEventosForm.get('email').errors && newEventosForm.get('email').touched}"
+                formControlName="email" type="text" class="form-control">
+              <div class="invalid-feedback" *ngIf="newEventosForm.get('email').hasError('required')">email obrigatório
+              </div>
+              <div class="invalid-feedback" *ngIf="newEventosForm.get('email').hasError('email')">email valido</div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="template.hide()">
+          Fechar
+        </button>
+        <button class="btn btn-primary ml-auto" [disabled]="!newEventosForm.valid" (click)="salvarEventoForm(template)">
+          Salvar Alterações
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <h3>Filtro: </h3>
 <table class="table table-striped">
   <thead class="thead-dark">
@@ -78,14 +165,13 @@
   </tfoot>
 </table>
 
-<ng-template #template>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Modal</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    This is a modal.
-  </div>
-</ng-template>
+
+
+
+
+<br>
+
+<br>
+<br>
+<p>{{newEventosForm.value | json}}</p>
+<p>{{newEventosForm.status | json}}</p>
