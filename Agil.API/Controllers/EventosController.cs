@@ -117,7 +117,7 @@ namespace Agil.API.Controllers
         }
 
         // DELETE api/values/5
-        [HttpDelete("{EventoIdac}")]
+        [HttpDelete("{EventoId}")]
         public async Task<IActionResult> Delete(int EventoId)
         {
              try

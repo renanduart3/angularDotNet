@@ -5,6 +5,7 @@ import { BsModalService, BsLocaleService, BsModalRef, BsDatepickerConfig } from 
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
+import { ToastrService } from 'ngx-toastr';
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -23,6 +24,7 @@ export class EventosComponent implements OnInit {
   modalRef: BsModalRef;
   newEventosForm: FormGroup;
   padraoQtdPessoas = '^[0-9]*$';
+  tipoAcao: string;
 
 
   constructor(
@@ -30,6 +32,7 @@ export class EventosComponent implements OnInit {
     , private modalService: BsModalService
     , private fb: FormBuilder
     , private localeService: BsLocaleService
+    , private toastr: ToastrService
   ) {
     this.localeService.use('pt-br');
   }
@@ -58,23 +61,61 @@ export class EventosComponent implements OnInit {
   }
 
 
-  editarEvento(eventoId: number) {
-    // this.evento = this.eventoService.getEventosById(eventoId).subscribe((evento: Evento) => {
+  editarEvento(evento: Evento, template: any) {
+    this.tipoAcao = 'put';
+    this.openModal(template);
+    this.evento = evento;
+    this.newEventosForm.patchValue(evento);
+  }
+  deletarEvento(evento: Evento) {
+    if (confirm('deseja deletar??')) {
+      this.eventoService.deleteEvento(evento.id)
+        .subscribe(
+          () => {
+            this.toastr.success('Evento deletado!', 'Delete');
+            this.getEventos();
+          },
+          (err) => {
+            console.log(err);
+          });
 
-    //  }, () => { });
+
+    } 
+  }
+
+
+  novoEvento(template: any) {
+    this.tipoAcao = 'post';
+    this.openModal(template);
   }
 
   salvarEventoForm(template: any) {
-    if (this.newEventosForm.valid) {
-      this.evento = Object.assign({}, this.newEventosForm.value);
-      this.eventoService.postNovoEvento(this.evento)
-        .subscribe((evento: Evento) => {
-          console.log(evento);
-          this.getEventos();
-          template.hide();
-        }, (error) => {
-          console.log(error);
-        });
+    if (this.tipoAcao === 'post') {
+
+      if (this.newEventosForm.valid) {
+        this.evento = Object.assign({}, this.newEventosForm.value);
+        this.eventoService.postNovoEvento(this.evento)
+          .subscribe((evento: Evento) => {
+            this.toastr.success('Hello world!', 'Toastr fun!');
+            this.getEventos();
+            template.hide();
+          }, (error) => {
+            this.toastr.warning('Ocorreu um erro', 'Toastr fun!');
+          });
+      }
+    } else {
+      if (this.newEventosForm.valid) {
+        this.evento = Object.assign({ id: this.evento.id }, this.newEventosForm.value);
+        this.eventoService.putEvento(this.evento)
+          .subscribe(() => {
+            this.toastr.success('Evento Alterado', 'Toastr fun!');
+            this.getEventos();
+            template.hide();
+          }, (error) => {
+            console.log(error);
+            this.toastr.warning('Ocorreu um erro', 'Toastr fun!');
+          });
+      }
     }
   }
 

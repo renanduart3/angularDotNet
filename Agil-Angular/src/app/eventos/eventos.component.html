@@ -6,7 +6,7 @@
     </div>
   </div>
   <div>
-    <button class="btn btn-outline-primary" (click)="openModal(template)">
+    <button class="btn btn-outline-primary" (click)="novoEvento(template)">
       <i class="fa fa-plus-circle"></i>&nbsp;
       Novo Evento
     </button>
@@ -117,7 +117,7 @@
       <th colspan="2">Opções</th>
     </tr>
   </thead>
-  <tbody *ngIf="eventos && eventos.length">
+  <tbody *ngIf="eventos">
     <tr *ngFor="let evento of eventos">
       <td>
         <img class="img-tabela" *ngIf="mostrarImagem" src="http://localhost:5000/img/{{evento.imagemURL}}">
@@ -139,10 +139,10 @@
       <td>
         <div class="btn-group">
           <!-- <button class="btn btn-sm btn-success" tooltip="Editar" (click)="editarEvento(evento, template)"> -->
-          <button class="btn btn-sm btn-success" tooltip="Editar" (click)="editarEvento(template)">
+          <button class="btn btn-sm btn-success" tooltip="Editar" (click)="editarEvento(evento,template)">
             <i class="fa fa-edit"></i>
           </button>
-          <button class="btn btn-sm btn-danger" tooltip="Excluir" (click)="excluirEvento(evento, confirm)">
+          <button class="btn btn-sm btn-danger" tooltip="Excluir" (click)="deletarEvento(evento)">
             <i class="fa fa-eraser"></i>
           </button>
         </div>

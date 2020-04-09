@@ -1,9 +1,10 @@
 using Agil.Domain;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Agil.Repository
 {
-    public class AgilDbContext:DbContext
+    public class AgilDbContext: IdentityDbContext
     {
         public AgilDbContext(DbContextOptions<AgilDbContext> options):base(options)
         {
