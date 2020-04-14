@@ -19,6 +19,9 @@ using Agil.Domain.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using AutoMapper;
 
 namespace Agil.API
 {
@@ -40,7 +43,9 @@ namespace Agil.API
             //      Configuration.GetSection("RabbitMQConfigurations"))
             //          .Configure(rabbitMQConfigurations);
             //  services.AddSingleton(rabbitMQConfigurations);
-
+            services.AddDbContext<AgilDbContext>(
+                          x => x.UseSqlite(Configuration.GetConnectionString("AngularSqlite"))
+                      );
 
             IdentityBuilder builder = services.AddIdentityCore<User>(options =>
             {
@@ -53,9 +58,21 @@ namespace Agil.API
 
             builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
             builder.AddEntityFrameworkStores<AgilDbContext>();
-            builder.AddRoleValidator<RoleValidator<Role>>();
             builder.AddRoleManager<RoleManager<Role>>();
+            builder.AddRoleValidator<RoleValidator<Role>>();
             builder.AddSignInManager<SignInManager<User>>();
+
+            // utilizando appsettings
+            // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //     .AddJwtBearer(options => 
+            //         options.TokenValidationParameters = new TokenValidationParameters
+            //         {
+            //             ValidateIssuerSigningKey = true,
+            //             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:TGSP").Value)),
+            //             ValidateIssuer = false,
+            //             ValidateAudience = false
+            //         }
+            //     );
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -64,7 +81,7 @@ namespace Agil.API
                         {
                             ValidateIssuerSigningKey = true,
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
-                                .GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                                .GetBytes("l33t-sup4-hax0rr")),
                             ValidateIssuer = false,
                             ValidateAudience = false
                         };
@@ -72,16 +89,24 @@ namespace Agil.API
                 );
 
 
+            services.AddMvc(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            .AddJsonOptions(op =>
+                op.SerializerSettings
+                .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddDbContext<AgilDbContext>(
-                x => x.UseSqlite(Configuration.GetConnectionString("AngularSqlite"))
-            );
             services.AddScoped<IAgilRepository, AgilRepository>();
+            services.AddAutoMapper();
             services.AddCors();
         }
 
@@ -98,7 +123,6 @@ namespace Agil.API
                 SupportedUICultures = supportedCultures
             });
 
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -109,6 +133,7 @@ namespace Agil.API
                 app.UseHsts();
             }
 
+            app.UseAuthentication();
             //app.UseHttpsRedirection();
             app.UseCors(x => x.AllowAnyOrigin()
                 .AllowAnyMethod()
