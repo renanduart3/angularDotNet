@@ -32,12 +32,13 @@ namespace Agil.API.Controllers
         }
 
         [HttpGet("getUsers")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetUsers()
         {
             return Ok(new UserDTO());
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register(UserDTO userdto)
         {
@@ -71,7 +72,7 @@ namespace Agil.API.Controllers
             {
                 //var user = await _userManager.FindByNameAsync(loginDTO.UserName);
                 var user = await _userManager.FindByNameAsync(loginDTO.UserName);
-            //  var result = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
+                //  var result = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
                 var result = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
 
                 if (result.Succeeded)
@@ -94,7 +95,7 @@ namespace Agil.API.Controllers
             }
             catch (System.Exception ex)
             {
-                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Banco Dados Falhou {ex.Message}");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Banco Dados Falhou {ex.Message}");
             }
         }
 
@@ -116,7 +117,7 @@ namespace Agil.API.Controllers
             //utilizando config
             //  var key = new SymmetricSecurityKey(Encoding.ASCII
             // .GetBytes(_config.GetSection("AppSettings:Token").Value));
-                                                                                    
+
             var chave = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("l33t-sup4-hax0rr"));
 
             // var credenciais = new SigningCredentials(chave, SecurityAlgorithms.HmacSha256);
@@ -132,9 +133,13 @@ namespace Agil.API.Controllers
             var tokenJwt = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(userClaims),
-                Expires = DateTime.Now.AddDays(1),
+                Expires = DateTime.UtcNow.AddMinutes(15),
+                //Expires = DateTime.Now.AddMinutes(15),
                 SigningCredentials = creds
             };
+
+            System.Console.WriteLine($"################## DATETIME : {tokenJwt.Expires}");
+
 
             // token gerado com jwtsecurity token
             // var token = new JwtSecurityTokenHandler().WriteToken(tokenJwt);

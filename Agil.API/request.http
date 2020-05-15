@@ -1,1 +1,40 @@
-get http://localhost:5000/api/eventos
+get http://localhost:5000/api/user/getUsers
+
+####
+POST http://localhost:5000/api/user/login HTTP/1.1
+content-type: application/json
+
+{
+    "userName": "renan",
+    "password": "123456"
+}
+####
+POST http://localhost:5000/api/user/login HTTP/1.1
+content-type: application/json
+{
+    "userName": "renan",
+    "password": "123456"
+}
+
+###
+POST http://localhost:5000/api/user/register HTTP/1.1
+content-type: application/json
+{
+  "fullName": "jack32",
+  "email": "r22@r2.com",
+  "password": "123456",
+  "userName": "jack234"
+}
+
+
+
+###
+GET http://localhost:5000/api/user/getUsers HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJyZW5hbiIsIm5iZiI6MTU4Njg5NDA4MSwiZXhwIjoxNTg2OTgwNDgxLCJpYXQiOjE1ODY4OTQwODF9.yggqOxqFLUy_XI2P6treD4fYOo4ubJ1W-c9V_Boz0qN1zlojcAKnSzgC704zIVWouP6lS7oCLbPQp3Qubc0giQ
+
+#EXEMPLO DE PARAMETROS PASSADOS PELO BODY DA REQUISICAO
+# {
+#     "name": "sample",
+#     "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+# }

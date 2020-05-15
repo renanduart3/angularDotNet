@@ -1,0 +1,23 @@
+<form [formGroup]="form">
+  <fieldset>
+    <legend>Login</legend>
+    <div class="form-field">
+      <label>userName:</label>
+      <input name="userName" formControlName="userName">
+    </div>
+    <div class="form-field">
+      <label>Password:</label>
+      <input name="password" formControlName="password" type="password">
+    </div>
+  </fieldset>
+  <div class="form-buttons">
+    <button class="button button-primary" (click)="login()">Login</button>
+  </div>
+</form>
+<div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
+<div *ngIf="loading" class="app-loading">
+  <div class="logo"></div>
+  <svg class="spinner" viewBox="25 25 50 50">
+    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+  </svg>
+</div>

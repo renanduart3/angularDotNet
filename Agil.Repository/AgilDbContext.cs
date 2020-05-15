@@ -24,7 +24,8 @@ namespace Agil.Repository
         {
             base.OnModelCreating(modelBuilder);
             
-            modelBuilder.Entity<UserRole>(  userRole =>{
+            modelBuilder.Entity<UserRole>( userRole =>
+            {
                 userRole.HasKey(ur => new { ur.UserId, ur.RoleId });
 
                 userRole.HasOne(ur => ur.Role)

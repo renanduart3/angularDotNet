@@ -118,6 +118,7 @@
     </tr>
   </thead>
   <tbody *ngIf="eventos">
+    <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
     <tr *ngFor="let evento of eventos">
       <td>
         <img class="img-tabela" *ngIf="mostrarImagem" src="http://localhost:5000/img/{{evento.imagemURL}}">

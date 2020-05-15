@@ -25,7 +25,7 @@ export class EventosComponent implements OnInit {
   newEventosForm: FormGroup;
   padraoQtdPessoas = '^[0-9]*$';
   tipoAcao: string;
-
+  loading = false;
 
   constructor(
     private eventoService: EventoService
@@ -38,7 +38,9 @@ export class EventosComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loading = true;
     this.getEventos();
+    this.loading = false;
     this.validation();
     this.bsConfig = Object.assign({}, { containerClass: this.colorTheme, dateInputFormat: 'DD-MM-YYYY' });
   }
