@@ -10,3 +10,4 @@
      steps:
        - checkout
        - run: dotnet build
+       - run: echo ############RenanTesteBuild circle CI
